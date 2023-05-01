@@ -8,7 +8,7 @@ import random
 USERNAME = None
 
 
-# helper functions
+# Helper functions
 def print_bot_line(text):
 	print(f"BART: {text}")
 
