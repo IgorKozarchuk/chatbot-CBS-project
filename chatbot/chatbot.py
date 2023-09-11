@@ -24,7 +24,7 @@ def print_user_line(text):
 # Main functions
 
 def greet():
-	GREETINS = ["Hello", "Hola", "Bonjour", "Buongiorno", "Hi", "Welcome"]
+	GREETINS = ["Hello", "Hola", "Bonjour", "Buongiorno", "Hi", "Welcome", "Ciao"]
 
 	welcome_msg = """Greatings! I am BART (Bot Assisting Real Talk) chatbot:)"""
 	print_bot_line(welcome_msg)
@@ -54,6 +54,14 @@ def tell_joke():
 	print_bot_line(pyjokes.get_joke())
 
 
+def say_bye():
+	BYES = ["Bye!", "Good bye!", "See you...", "Ciao", "Arrivederci", "Hasta la vista"]
+
+	global USERNAME
+
+	print_bot_line(random.choice(BYES))
+
+
 # main loop
 def main_loop():
 	user_choice = None
@@ -64,6 +72,7 @@ def main_loop():
 			case "1":
 				tell_joke()
 			case "0":
+				say_bye()
 				break
 			case _:
 				continue
