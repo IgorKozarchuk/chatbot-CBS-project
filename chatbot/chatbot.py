@@ -31,7 +31,7 @@ def clean_dataset():
 		# remove movies with 0 score
 		df.drop(df[df.vote_score == 0].index, inplace=True)
 		# print(df.shape[0])
-		df.to_csv(clean_path)
+		df.to_csv(clean_path, index=False)
 
 	# print("clean dataset already exists")
 
@@ -67,13 +67,17 @@ def select_activity():
 def tell_joke():
 	print_bot_line(pyjokes.get_joke())
 
+
 def recommend_movie():
 	print_bot_line("Movie test")
 
-	# df = pd.read_csv()
+	df = pd.read_csv("chatbot/TMDB_movie_dataset_clean.csv")
+	print(df.head())
+
 
 def play_game():
 	print_bot_line("Game test")
+
 
 def say_bye():
 	BYES = ["Bye!", "Good bye!", "See you...", "Ciao", "Arrivederci", "Hasta la vista"]
@@ -108,3 +112,5 @@ if __name__ == "__main__":
 
 	# greet()
 	# main_loop()
+
+	recommend_movie()
