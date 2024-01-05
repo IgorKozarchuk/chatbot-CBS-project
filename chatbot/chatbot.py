@@ -54,9 +54,9 @@ def greet():
 
 
 def select_activity():
-	print_bot_line("What do you want to do?")
+	print()
 
-	user_choice = input_bot_prompt("Select an activity:\n"\
+	user_choice = input_bot_prompt("What do you want to do? Select an activity:\n"\
 									"1 - tell a joke\n"\
 									"2 - recommend a movie\n"\
 									"3 - play a game\n"\
@@ -73,34 +73,29 @@ def tell_joke():
 
 def recommend_movie():
 	df = pd.read_csv("chatbot/TMDB_movie_dataset_clean.csv")
-	# print(df.head())
-	# print_bot_line("I can recommend you a movie based on genre, year, rating, and tagline.")
-	# user_genre = input_bot_prompt("- Enter genre: ").title()
-	# user_years = [int(x) for x in input_bot_prompt("- year range (space separated): ").split(maxsplit=1)]
-	# user_rating = input_bot_prompt("- minimal rating: ")
-	# user_tagline = input_bot_prompt("- tagline keywords: ")
 
+	print_bot_line("I can recommend you a movie based on a genre, year and rating.")
+	user_genre = input_bot_prompt("- Enter genre: ").title() # e.g. Drama
+	user_years = [int(x) for x in input_bot_prompt("- year range (space separated): ").split(maxsplit=1)] # e.g. [1995, 2000]
+	user_rating = int(input_bot_prompt("- minimal rating: ")) # e.g. 8
+	
 	# filter movies
-	user_genre = "Drama"
-	new_df = pd.DataFrame(columns=df.columns)
+	recommended_movies_df = pd.DataFrame(columns=df.columns)
+	LIST_MAX_LENGTH = 10
 
-	# print(len(df.index))
-	# print(df.iloc[0])
-
-	# filter by genre
 	for i in range(len(df.index)):
-		if user_genre in df.iloc[i]["genres"]:
+		if (user_rating <= df.iloc[i]["vote_score"] and
+			(user_years[0] <= int(df.iloc[i]["release_date"][-4:]) and user_years[1] >= int(df.iloc[i]["release_date"][-4:])) and
+			user_genre in df.iloc[i]["genres"]):
 			# https://stackoverflow.com/questions/44156051/add-a-series-to-existing-dataframe
-			new_df = pd.concat([new_df, df.iloc[i].to_frame().T], ignore_index=True)
-				
-	print(new_df)
+			recommended_movies_df = pd.concat([recommended_movies_df, df.iloc[i].to_frame().T], ignore_index=True)
+	
+	if recommended_movies_df.empty:
+		print_bot_line("Sorry, no matching movies found:(")
+		return
 
-	# print([movie for movie in df if user_genre in [x.split(", ") for x in df.genres.head()]])
-	# g =[x.split(", ") for x in df.genres.head()]
-	# m = [x for x in g if user_genre in x]
-	# print(m)
-	# recommended_movies = [x for x in df.genres]
-	# print(recommended_movies.head())
+	print_bot_line("Here is the list of top rated recommended movies:")
+	print(recommended_movies_df.iloc[:, 1:].sort_values(by="vote_score", ascending=False).head(LIST_MAX_LENGTH).to_string(index=False))
 
 
 def play_game():
@@ -137,8 +132,5 @@ def main_loop():
 
 if __name__ == "__main__":
 	clean_dataset()
-
-	# greet()
-	# main_loop()
-
-	recommend_movie()
+	greet()
+	main_loop()
