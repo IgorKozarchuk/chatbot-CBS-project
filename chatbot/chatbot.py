@@ -1,8 +1,10 @@
-""" Simple Chatbot in Python (No Machine Learning) """
+""" Simple Chatbot in Python (no Machine Learning) """
 
 
 import random
 import pyjokes
+import os.path
+import pandas as pd
 
 
 # Global vars
@@ -20,13 +22,25 @@ def input_bot_prompt(text):
 def print_user_line(text):
 	print(f"{USERNAME}: {text}")
 
+def clean_dataset():
+	clean_path = "chatbot/TMDB_movie_dataset_clean.csv"
+
+	if not os.path.isfile(clean_path):
+		df = pd.read_csv("chatbot/TMDB_movie_dataset.csv")
+		# print(df.shape[0])
+		# remove movies with 0 score
+		df.drop(df[df.vote_score == 0].index, inplace=True)
+		# print(df.shape[0])
+		df.to_csv(clean_path)
+
+	# print("clean dataset already exists")
 
 # Main functions
 
 def greet():
 	GREETINS = ["Hello", "Hola", "Bonjour", "Buongiorno", "Hi", "Welcome", "Ciao"]
 
-	welcome_msg = """Greatings! I am BART (Bot Assisting Real Talk) chatbot:)"""
+	welcome_msg = """Greatings! I am BART (Bot-Assisted Real Talk) chatbot:)"""
 	print_bot_line(welcome_msg)
 
 	global USERNAME
@@ -42,7 +56,7 @@ def select_activity():
 	user_choice = input_bot_prompt("Select an activity:\n"\
 									"1 - tell a joke\n"\
 									"2 - recommend a movie\n"\
-									"3 - ...\n"\
+									"3 - play a game\n"\
 									"0 - EXIT\n"\
 									f"{USERNAME}: "
 	)
@@ -53,6 +67,13 @@ def select_activity():
 def tell_joke():
 	print_bot_line(pyjokes.get_joke())
 
+def recommend_movie():
+	print_bot_line("Movie test")
+
+	# df = pd.read_csv()
+
+def play_game():
+	print_bot_line("Game test")
 
 def say_bye():
 	BYES = ["Bye!", "Good bye!", "See you...", "Ciao", "Arrivederci", "Hasta la vista"]
@@ -71,6 +92,10 @@ def main_loop():
 		match user_choice:
 			case "1":
 				tell_joke()
+			case "2":
+				recommend_movie()
+			case "3":
+				play_game()
 			case "0":
 				say_bye()
 				break
@@ -79,5 +104,7 @@ def main_loop():
 
 
 if __name__ == "__main__":
-	greet()
-	main_loop()
+	clean_dataset()
+
+	# greet()
+	# main_loop()
