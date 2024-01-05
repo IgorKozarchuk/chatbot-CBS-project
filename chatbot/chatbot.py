@@ -1,4 +1,4 @@
-""" Simple Chatbot in Python (no Machine Learning) """
+""" Simple Chatbot in Python (no ML or AI) """
 
 
 import random
@@ -43,7 +43,7 @@ def clean_dataset():
 def greet():
 	GREETINS = ["Hello", "Hola", "Bonjour", "Buongiorno", "Hi", "Welcome", "Ciao"]
 
-	welcome_msg = """Greatings! I am BART (Bot-Assisted Real Talk) chatbot:)"""
+	welcome_msg = """Greetings! I am BART (Bot-Assisted Real Talk) chatbot:)"""
 	print_bot_line(welcome_msg)
 
 	global USERNAME
@@ -72,7 +72,7 @@ def tell_joke():
 
 
 def recommend_movie():
-	df = pd.read_csv("chatbot/TMDB_movie_dataset_clean.csv")
+	df = pd.read_csv("chatbot/TMDB_movie_dataset_clean.csv") # dataframe
 
 	print_bot_line("I can recommend you a movie based on a genre, year and rating.")
 	user_genre = input_bot_prompt("- Enter genre: ").title() # e.g. Drama
@@ -112,11 +112,8 @@ def say_bye():
 
 # main loop
 def main_loop():
-	user_choice = None
-
 	while True:
-		user_choice = select_activity()
-		match user_choice:
+		match select_activity():
 			case "1":
 				tell_joke()
 			case "2":
