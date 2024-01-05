@@ -16,11 +16,14 @@ USERNAME = None
 def print_bot_line(text):
 	print(f"BART: {text}")
 
+
 def input_bot_prompt(text):
 	return input(f"BART: {text}")
 
+
 def print_user_line(text):
 	print(f"{USERNAME}: {text}")
+
 
 def clean_dataset():
 	clean_path = "chatbot/TMDB_movie_dataset_clean.csv"
@@ -34,6 +37,7 @@ def clean_dataset():
 		df.to_csv(clean_path, index=False)
 
 	# print("clean dataset already exists")
+
 
 # Main functions
 
@@ -69,10 +73,15 @@ def tell_joke():
 
 
 def recommend_movie():
-	print_bot_line("Movie test")
-
 	df = pd.read_csv("chatbot/TMDB_movie_dataset_clean.csv")
-	print(df.head())
+	# print(df.head())
+	print_bot_line("I can recommend you a movie based on genre, year, rating, and tagline.")
+	user_genre = input_bot_prompt("- Enter genre: ")
+	user_year = input_bot_prompt("- year: ")
+	user_rating = input_bot_prompt("- minimal rating: ")
+	user_tagline = input_bot_prompt("- tagline keywords: ")
+
+	print(user_year, user_genre, user_rating, user_tagline)
 
 
 def play_game():
