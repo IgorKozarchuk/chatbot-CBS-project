@@ -30,13 +30,12 @@ def clean_dataset():
 
 	if not os.path.isfile(clean_path):
 		df = pd.read_csv("chatbot/TMDB_movie_dataset.csv")
-		# print(df.shape[0])
 		# remove movies with 0 score
 		df.drop(df[df.vote_score == 0].index, inplace=True)
-		# print(df.shape[0])
+		# remove fows with empty values
+		df.dropna(inplace=True)
+		# save to a new file
 		df.to_csv(clean_path, index=False)
-
-	# print("clean dataset already exists")
 
 
 # Main functions
@@ -75,13 +74,33 @@ def tell_joke():
 def recommend_movie():
 	df = pd.read_csv("chatbot/TMDB_movie_dataset_clean.csv")
 	# print(df.head())
-	print_bot_line("I can recommend you a movie based on genre, year, rating, and tagline.")
-	user_genre = input_bot_prompt("- Enter genre: ")
-	user_year = input_bot_prompt("- year: ")
-	user_rating = input_bot_prompt("- minimal rating: ")
-	user_tagline = input_bot_prompt("- tagline keywords: ")
+	# print_bot_line("I can recommend you a movie based on genre, year, rating, and tagline.")
+	# user_genre = input_bot_prompt("- Enter genre: ").title()
+	# user_years = [int(x) for x in input_bot_prompt("- year range (space separated): ").split(maxsplit=1)]
+	# user_rating = input_bot_prompt("- minimal rating: ")
+	# user_tagline = input_bot_prompt("- tagline keywords: ")
 
-	print(user_year, user_genre, user_rating, user_tagline)
+	# filter movies
+	user_genre = "Drama"
+	new_df = pd.DataFrame(columns=df.columns)
+
+	# print(len(df.index))
+	# print(df.iloc[0])
+
+	# filter by genre
+	for i in range(len(df.index)):
+		if user_genre in df.iloc[i]["genres"]:
+			# https://stackoverflow.com/questions/44156051/add-a-series-to-existing-dataframe
+			new_df = pd.concat([new_df, df.iloc[i].to_frame().T], ignore_index=True)
+				
+	print(new_df)
+
+	# print([movie for movie in df if user_genre in [x.split(", ") for x in df.genres.head()]])
+	# g =[x.split(", ") for x in df.genres.head()]
+	# m = [x for x in g if user_genre in x]
+	# print(m)
+	# recommended_movies = [x for x in df.genres]
+	# print(recommended_movies.head())
 
 
 def play_game():
