@@ -1,5 +1,6 @@
 import random
 
+from modules import settings
 from modules.settings import print_bot_line, input_bot_prompt
 
 
@@ -21,7 +22,7 @@ def play_game():
 					available_cells.append((i,j))
 
 
-	def upodate_available_cells(move):
+	def update_available_cells(move):
 		available_cells.remove(move)
 
 
@@ -40,7 +41,7 @@ def play_game():
 
 	def get_user_move():
 		while True:
-			user_move = input_bot_prompt("To make a move, enter coordinates (e.g. A1, B2): ").upper()
+			user_move = input_bot_prompt(f"To make a move, enter coordinates (e.g. A1, B2)\n{settings.USERNAME}: ").upper()
 			if (ord(user_move[0]) not in range(65, 68) or 
 				ord(user_move[1]) not in range(49, 52)): # not A, B, C or 1, 2, 3
 				print_bot_line("Wrong coordinates.")
@@ -50,15 +51,16 @@ def play_game():
 
 	def make_user_move(user_move):
 		move_coords = (ord(user_move[0])-64, ord(user_move[1])-48) # from ASCII code to board coords
+		print(move_coords)
 
-		if (board[move_coords[0]][move_coords[1]] == "X" or
-			board[move_coords[0]][move_coords[1]] == "0"): # if square is occupied
+		if (board[move_coords[1]][move_coords[0]] == "X" or
+			board[move_coords[1]][move_coords[0]] == "0"): # if square is occupied
 			print_bot_line("The square is occupied. Try again.")
 			make_user_move(get_user_move())
 
-		board[move_coords[0]][move_coords[1]] = "X"
+		board[move_coords[1]][move_coords[0]] = "X"
 
-		upodate_available_cells(move_coords)
+		update_available_cells(move_coords)
 		print_board(board)
 
 
@@ -66,25 +68,21 @@ def play_game():
 		print_bot_line("My turn")
 
 		bot_move = random.choice(available_cells)
-		board[bot_move[0]][bot_move[1]] = "0"
-		upodate_available_cells(bot_move)
+		board[bot_move[1]][bot_move[0]] = "0"
+		print(bot_move)
+		update_available_cells(bot_move)
 		
 		print_board(board)
 
 
 	def game_loop():
-		print_bot_line("Let's play Tic-Tac-Toe game!")
+		print_bot_line("Let's play a Tic-Tac-Toe game!")
 		print_board(board)
 		init_available_cells()
 
 		for i in range(3):
-			user_move = get_user_move()
-			make_user_move(user_move)
+			make_user_move(get_user_move())
 			make_bot_move()
-			
 
-		# print(chr(65), chr(66), chr(67))
-		# print(chr(49), chr(50), chr(51))
-		# print(chr(95))
 
 	game_loop()
