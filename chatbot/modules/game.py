@@ -1,3 +1,5 @@
+import random
+
 from modules.settings import print_bot_line, input_bot_prompt
 
 
@@ -8,6 +10,20 @@ def play_game():
 			["1", "_", "_", "_"],
 			["2", "_", "_", "_"],
 			["3", "_", "_", "_"]]
+	
+	available_cells = []
+
+
+	def init_available_cells():
+		for i in range(1, len(board[0])):
+			for j in range(1, len(board[0])):
+				if board[i][j] == "_":
+					available_cells.append((i,j))
+
+
+	def upodate_available_cells(move):
+		available_cells.remove(move)
+
 
 	def print_board(board):
 		for row in board:
@@ -15,10 +31,12 @@ def play_game():
 				print(i, end=" ")
 			print()
 
+
 	def reset_board(board):
 		for i in range(1, len(board[0])):
 			for j in range(1, len(board[0])):
 				board[i][j] = "_"
+
 
 	def get_user_move():
 		while True:
@@ -29,8 +47,9 @@ def play_game():
 				continue
 			return user_move
 
+
 	def make_user_move(user_move):
-		move_coords = [ord(user_move[0])-64, ord(user_move[1])-48] # from ASCII code to board coords
+		move_coords = (ord(user_move[0])-64, ord(user_move[1])-48) # from ASCII code to board coords
 
 		if (board[move_coords[0]][move_coords[1]] == "X" or
 			board[move_coords[0]][move_coords[1]] == "0"): # if square is occupied
@@ -39,16 +58,30 @@ def play_game():
 
 		board[move_coords[0]][move_coords[1]] = "X"
 
+		upodate_available_cells(move_coords)
+		print_board(board)
+
+
+	def make_bot_move():
+		print_bot_line("My turn")
+
+		bot_move = random.choice(available_cells)
+		board[bot_move[0]][bot_move[1]] = "0"
+		upodate_available_cells(bot_move)
+		
+		print_board(board)
+
+
 	def game_loop():
 		print_bot_line("Let's play Tic-Tac-Toe game!")
 		print_board(board)
+		init_available_cells()
 
 		for i in range(3):
 			user_move = get_user_move()
 			make_user_move(user_move)
+			make_bot_move()
 			
-			print_board(board)
-
 
 		# print(chr(65), chr(66), chr(67))
 		# print(chr(49), chr(50), chr(51))
