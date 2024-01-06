@@ -51,7 +51,6 @@ def play_game():
 
 	def make_user_move(user_move):
 		move_coords = (ord(user_move[0])-64, ord(user_move[1])-48) # from ASCII code to board coords
-		print(move_coords)
 
 		if (board[move_coords[1]][move_coords[0]] == "X" or
 			board[move_coords[1]][move_coords[0]] == "0"): # if square is occupied
@@ -69,7 +68,6 @@ def play_game():
 
 		bot_move = random.choice(available_cells)
 		board[bot_move[1]][bot_move[0]] = "0"
-		print(bot_move)
 		update_available_cells(bot_move)
 		
 		print_board(board)
