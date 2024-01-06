@@ -18,8 +18,7 @@ def greet():
 	welcome_msg = """Greetings! I am BART (Bot-Assisted Real Talk) chatbot:)"""
 	print_bot_line(welcome_msg)
 
-	settings.USERNAME = input_bot_prompt("What's your name?\n"\
-								f"Username: ")
+	settings.USERNAME = input_bot_prompt("What's your name? ")
 
 	print_bot_line(f"{random.choice(GREETINS)}, {settings.USERNAME}!")
 
