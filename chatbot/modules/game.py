@@ -11,9 +11,9 @@ def play_game():
 			["1", "_", "_", "_"],
 			["2", "_", "_", "_"],
 			["3", "_", "_", "_"]]
-	
-	available_cells = []
 
+	available_cells = []
+	bot_move_number = 0
 
 	def print_board():
 		for row in board:
@@ -100,9 +100,48 @@ def play_game():
 
 	
 	def make_bot_move():
+		def check_for_winning_move(): # search for 2 "0" and 1 "_"
+			win_move = None
+			# search rows
+			for i in range(1, len(board[0])):
+				if board[i].count("0") == 2 and board[i].count("_") == 1:
+					win_move = (i, board[i].index("_"))
+					return win_move
+			# search columns
+			for i in range(1, len(board[0])):
+				col = []
+				for j in range(1, len(board[0])):
+					col.append(board[j][i])
+				if col.count("0") == 2 and col.count("_") == 1:
+					win_move = (col.index("_")+1, i)
+					return win_move
+			# search diagonals
+			diagonal1 = [board[i][i] for i in range(1, len(board[0]))] # diagonal 1
+			if diagonal1.count("0") == 2 and diagonal1.count("_") == 1:
+				win_move = (diagonal1.index("_")+1, diagonal1.index("_")+1)
+				return win_move
+
+			diagonal2 = [board[i][len(board[0])-i] for i in range(1, len(board[0]))] # diagonal 2
+			if diagonal2.count("0") == 2 and diagonal2.count("_") == 1:
+				win_move = (diagonal2.index("_")+1, len(board[0])-diagonal2.index("_")-1)
+				return win_move
+
+			return win_move
+
+
 		print_bot_line("My turn")
 
-		bot_move = random.choice(available_cells)
+		nonlocal bot_move_number
+		bot_move_number += 1
+		bot_move = None
+
+		if bot_move_number > 2:
+			bot_move = check_for_winning_move()
+			if not bot_move:
+				bot_move = random.choice(available_cells)
+		else:
+			bot_move = random.choice(available_cells)
+
 		board[bot_move[0]][bot_move[1]] = "0"
 
 		update_available_cells(bot_move)
