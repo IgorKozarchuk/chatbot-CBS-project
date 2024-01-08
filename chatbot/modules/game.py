@@ -15,17 +15,6 @@ def play_game():
 	available_cells = []
 
 
-	def init_available_cells():
-		for i in range(1, len(board[0])):
-			for j in range(1, len(board[0])):
-				if board[i][j] == "_":
-					available_cells.append((i,j))
-
-
-	def update_available_cells(move):
-		available_cells.remove(move)
-
-
 	def print_board():
 		for row in board:
 			for i in row:
@@ -39,31 +28,15 @@ def play_game():
 				board[i][j] = "_"
 
 
-	def make_user_move():
-		user_move = input_bot_prompt(f"To make a move, enter coordinates (e.g. A1, B2)\n{settings.USERNAME}: ").upper()
+	def init_available_cells():
+		available_cells.clear()
+		for i in range(1, len(board[0])):
+			for j in range(1, len(board[0])):
+				available_cells.append((i,j))
 
-		if (ord(user_move[0]) not in range(65, 68) or 
-			ord(user_move[1]) not in range(49, 52)): # not A, B, C or 1, 2, 3
-			print_bot_line("Wrong coordinates.")
-			make_user_move()
 
-		move_coords = (ord(user_move[0])-64, ord(user_move[1])-48) # from ASCII code to board coords
-
-		if (board[move_coords[1]][move_coords[0]] == "X" or
-			board[move_coords[1]][move_coords[0]] == "0"): # if square is occupied
-			print_bot_line("The square is occupied. Try again.")
-			make_user_move()
-
-		board[move_coords[1]][move_coords[0]] = "X"
-
-		update_available_cells(move_coords)
-		print_board()
-
-		if not available_cells:
-			if not check_win_condition():
-				return 3 # draw
-		
-		return check_win_condition()
+	def update_available_cells(move):
+		available_cells.remove(move)
 
 
 	def check_win_condition():
@@ -92,12 +65,45 @@ def play_game():
 			board[1][3] == board[2][2] == board[3][1] == "0"):
 			return 2 # 0 win
 
+
+	def make_user_move():
+		user_move = input_bot_prompt(f"To make a move, enter coordinates (e.g. A1, B2)\n{settings.USERNAME}: ")
+		user_move = user_move.strip()
+
+		if len(user_move) != 2:
+			return make_user_move()
+
+		user_move = user_move.upper()
+
+		if (ord(user_move[0]) not in range(65, 68) or 
+			ord(user_move[1]) not in range(49, 52)): # not A, B, C or 1, 2, 3
+			print_bot_line("Wrong coordinates.")
+			return make_user_move()
+			
+		move_coords = (ord(user_move[1])-48, ord(user_move[0])-64) # from ASCII code to board coords
+
+		if (board[move_coords[0]][move_coords[1]] == "X" or
+			board[move_coords[0]][move_coords[1]] == "0"): # if square is occupied
+			print_bot_line("The square is occupied. Try again.")
+			return make_user_move()
+			
+		board[move_coords[0]][move_coords[1]] = "X"
+
+		update_available_cells(move_coords)
+		print_board()
+
+		if not available_cells:
+			if not check_win_condition():
+				return 3 # draw
+		
+		return check_win_condition()
+
 	
 	def make_bot_move():
 		print_bot_line("My turn")
 
 		bot_move = random.choice(available_cells)
-		board[bot_move[1]][bot_move[0]] = "0"
+		board[bot_move[0]][bot_move[1]] = "0"
 
 		update_available_cells(bot_move)
 		print_board()
@@ -135,10 +141,14 @@ def play_game():
 
 	def run_game():
 		print_bot_line("Let's play a Tic-Tac-Toe game!")
+			
 		print_board()
 		init_available_cells()
 		game_loop()
 		reset_board()
 
-
+		answer = input_bot_prompt("Play again? (y/n): ").lower()
+		if answer == "y":
+			run_game()
+	
 	run_game()
