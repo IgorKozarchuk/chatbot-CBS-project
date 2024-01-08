@@ -115,28 +115,25 @@ def play_game():
 		return check_win_condition()
 
 
+	def check_game_over(move_result):
+		match move_result:
+			case 1: # X win (user win)
+				print_bot_line("Congrats, you win!")
+				return True
+			case 2: # 0 win (bot win)
+				print_bot_line("I win!")
+				return True
+			case 3: # draw
+				print_bot_line("It's a draw.")
+				return True
+
+
 	def game_loop():
 		while True:
-			match make_user_move():
-				case 1: # X win (user win)
-					print_bot_line("Congrats, you win!")
-					return
-				case 2: # 0 win (bot win)
-					print_bot_line("I win!")
-					return
-				case 3: # draw
-					print_bot_line("It's a draw.")
-					return
-			match make_bot_move():
-				case 1: # X win (user win)
-					print_bot_line("Congrats, you win!")
-					return
-				case 2: # 0 win (bot win)
-					print_bot_line("I win!")
-					return
-				case 3: # draw
-					print_bot_line("It's a draw.")
-					return
+			if check_game_over(make_user_move()):
+				break
+			if check_game_over(make_bot_move()):
+				break
 
 
 	def run_game():
