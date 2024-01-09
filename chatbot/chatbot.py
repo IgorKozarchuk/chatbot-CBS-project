@@ -4,7 +4,7 @@
 import random
 
 from modules import settings
-from modules.settings import print_bot_line, input_bot_prompt, print_user_line
+from modules.settings import print_bot_line, input_bot_prompt
 from modules.joke import tell_joke
 from modules.movie import clean_dataset, recommend_movie
 from modules.game import play_game
