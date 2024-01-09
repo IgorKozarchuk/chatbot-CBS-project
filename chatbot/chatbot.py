@@ -62,7 +62,6 @@ def main_loop():
 
 if __name__ == "__main__":
 	settings.init()
-	# clean_dataset()
-	# greet()
-	# main_loop()
-	play_game()
+	clean_dataset()
+	greet()
+	main_loop()
