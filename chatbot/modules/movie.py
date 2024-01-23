@@ -1,4 +1,4 @@
-import os.path
+import os
 import pandas as pd
 
 from modules.settings import print_bot_line, input_bot_prompt
